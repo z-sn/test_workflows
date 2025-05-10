@@ -1,23 +1,24 @@
-name: CI
+name: Format Pull Request Files
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
   issue_comment:
     types: [created]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+env:
+  bashPass: \033[32;1mPASSED -
+  bashInfo: \033[33;1mINFO -
+  bashFail: \033[31;1mFAILED -
+  bashEnd:  \033[0m
 
+jobs:
+  Formatting:
+    name: Run Formatting Check
+    if: ${{ github.event.issue.pull_request &&
+        ( ( github.event.comment.body == '/bot run uncrustify' ) ||
+          ( github.event.comment.body == '/bot run formatting' ) ) }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: npm install
-      - run: npm test
-
+      - name: Set up tools
+      - run: apt update
+      - run: apt install vim
