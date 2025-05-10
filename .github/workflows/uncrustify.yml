@@ -1,0 +1,28 @@
+name: Uncrustify Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  uncrustify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Uncrustify
+        run: sudo apt-get install -y uncrustify
+
+      - name: Run Uncrustify (Check)
+        run: |
+          mkdir -p uncrustify-diff
+          for file in $(find . -name '*.c' -o -name '*.cpp' -o -name '*.h'); do
+            cp "$file" "uncrustify-diff/$file"
+            uncrustify -c .uncrustify.cfg --frag --replace --no-backup "$file"
+          done
+          git diff --exit-code || (echo "Code style issues found. Please run Uncrustify locally and commit changes."; exit 1)
+
