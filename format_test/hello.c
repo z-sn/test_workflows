@@ -1,13 +1,10 @@
-  #include <stdio.h>
+#include <stdio.h>
 
 
-                         int main()
+int main()
 
 
 {
-            printf( "Hello world!\n" );
-                            return 0;
-
-
-    
+    printf( "Hello world!\n" );
+    return 0;
 }
